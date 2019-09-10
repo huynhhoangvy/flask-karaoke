@@ -10,6 +10,9 @@ from components.users import users_blueprint
 from components.songs import songs_blueprint
 
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 CORS(app)
 
 POSTGRES = {
@@ -20,10 +23,7 @@ POSTGRES = {
     'port': os.environ['POSTGRES_PORT'],
 }
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:\
-%(port)s/%(db)s' % POSTGRES
-
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 
 app.config['SECRET_KEY'] = 'karaokesecretkey'
 
