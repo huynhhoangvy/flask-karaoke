@@ -15,15 +15,16 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 CORS(app)
 
-POSTGRES = {
-    'user': os.environ['POSTGRES_USER'],
-    'pw': os.environ['POSTGRES_PWD'],
-    'db': os.environ['POSTGRES_DB'],
-    'host': os.environ['POSTGRES_HOST'],
-    'port': os.environ['POSTGRES_PORT'],
-}
+# POSTGRES = {
+#     'user': os.environ['POSTGRES_USER'],
+#     'pw': os.environ['POSTGRES_PWD'],
+#     'db': os.environ['POSTGRES_DB'],
+#     'host': os.environ['POSTGRES_HOST'],
+#     'port': os.environ['POSTGRES_PORT'],
+# }
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://lqymamquruhlvj:c88bd52ca2cc03cf00d5fa1fbb9bb8a3ee1234878b9caa31ab5ea481e459cb6a@ec2-54-221-212-126.compute-1.amazonaws.com:5432/d9ll967ioeotcp'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 
 app.config['SECRET_KEY'] = 'karaokesecretkey'
 
