@@ -23,7 +23,7 @@ CORS(app)
 #     'port': os.environ['POSTGRES_PORT'],
 # }
 
-app.config['SQLALCHEMY_DATABASE_URI'] = $(heroku config:get DATABASE_URL -a flask-karaoke)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.system("heroku config:get DATABASE_URL -a flask-karaoke")
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 
 app.config['SECRET_KEY'] = 'karaokesecretkey'
