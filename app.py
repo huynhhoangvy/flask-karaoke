@@ -23,7 +23,7 @@ CORS(app)
 #     'port': os.environ['POSTGRES_PORT'],
 # }
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://lqymamquruhlvj:c88bd52ca2cc03cf00d5fa1fbb9bb8a3ee1234878b9caa31ab5ea481e459cb6a@ec2-54-221-212-126.compute-1.amazonaws.com:5432/d9ll967ioeotcp'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://kisapxtgyyxhxq:1184f586a5f948a047b1d57ec0ea44e2a7f7e3b1e6eae2d20667d1a94d44cd8c@ec2-107-20-251-130.compute-1.amazonaws.com:5432/dado1c83jgclfc'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 
 app.config['SECRET_KEY'] = 'karaokesecretkey'
