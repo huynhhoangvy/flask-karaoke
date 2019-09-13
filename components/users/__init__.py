@@ -46,6 +46,7 @@ def test():
 
 @users_blueprint.route('/register', methods=['get', 'post'])
 def register():
+    print('print request.json: ', request.json)
     user = User.query.filter_by(username=request.json['username']).first()
 
     if user:
@@ -67,6 +68,7 @@ def register():
 
 @users_blueprint.route('/login', methods=['post'])
 def login():
+    print('print request.json: ', request.json)
     log_user = User.query.filter_by(username=request.json['username']).first()
 
     if log_user is None:
@@ -111,3 +113,20 @@ def logout(current_user):
 def current(current_user):
     login_user(current_user)
     return jsonify({'message': 'log in successfully', 'user': current_user.username})
+
+@users_blueprint.route('/all', methods=['GET'])
+def all():
+    users = User.query.all()
+    print(users[2].username)
+    print(users[1])
+    print(type(users))
+    messages = {}
+    for user in users:
+        message = {'username': user.username, 'email': user.email}
+        # print(message)
+        # print(type(message))
+        messages.update(message)
+        print(messages)
+    print(type(messages))
+    print(messages)
+    return jsonify(messages)
