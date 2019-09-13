@@ -130,3 +130,9 @@ def all():
     print(type(messages))
     print(messages)
     return jsonify(messages)
+
+@users_blueprint.route('/first', methods=['GET'])
+def first():
+    user = User.query.first()
+    print('username: ', user.username)
+    return jsonify({'username': user.username})
