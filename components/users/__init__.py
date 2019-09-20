@@ -17,41 +17,38 @@ def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
-        print(request.headers)
 
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
 
         if not token: 
-            return jsonify({'status': 'fail', 'message': 'Token is missing'}), 401
+            return jsonify({
+                'status': 'fail', 
+                'message': 'Token is missing'
+                }), 401
         
         try:
             data = jwt.decode(token, current_app.config['SECRET_KEY'])
-            print('print data in try: ', data)
             current_user = User.query.filter_by(public_id=data['public_id']).first()
-            print('print current username: ', current_user.username)
-            print('print token in try: ', current_user.token.token)
         except:
-            print('print data in except: ', jwt.decode(token, current_app.config['SECRET_KEY']))
-            print('print token in except: ', User.query.filter_by(public_id=data['public_id']).first().token.token)
-            return jsonify({'status': 'fail', 'message': 'Token is invalid!'}), 401
+            return jsonify({
+                'status': 'fail', 
+                'message': 'Token is invalid!'
+                }), 401
 
         return f(current_user, *args, **kwargs)
 
     return decorated
 
-@users_blueprint.route('/test')
-def test():
-    return jsonify({'status': 'success', 'hello': 'users'})
-
 @users_blueprint.route('/register', methods=['get', 'post'])
 def register():
-    print('print request.json: ', request.json)
     user = User.query.filter_by(username=request.json['username']).first()
 
     if user:
-        print('print user: ', user)
-        return jsonify({'status': 'fail', 'message': 'username has been exist'})
+        return jsonify({
+            'status': 'fail', 
+            'message': 'Username has been exist'
+        })
 
     new_user = User(public_id=str(uuid.uuid4()),
                     username=request.json['username'],
@@ -64,38 +61,45 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({'status': 'success', 'message': 'done signing up'})
+    return jsonify({
+        'status': 'success', 
+        'message': 'Done signing up'
+        })
 
 @users_blueprint.route('/login', methods=['post'])
 def login():
-    print('print request.json: ', request.json)
     log_user = User.query.filter_by(username=request.json['username']).first()
 
     if log_user is None:
-        return jsonify({'status': 'fail', 'message': "username doesn't exist!!"})
+        return jsonify({
+            'status': 'fail', 
+            'message': "username doesn't exist!!"
+            })
 
 
     if not log_user.check_password(request.json['password']):
-        return jsonify({'status': 'fail', 'message': 'wrong password'})
+        return jsonify({
+            'status': 'fail', 
+            'message': 'wrong password'
+            })
     
     login_user(log_user)
-    print('login success, user: ', log_user.username)
 
     if log_user.token:
         token = log_user.token.token
-        print('print existing token: ', token)
 
     else: 
-        print('this user has no token, creating a new one')
         token = jwt.encode({'public_id': log_user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(weeks=1)}, current_app.config['SECRET_KEY'])
-        print('print token: ', token.decode('UTF-8'))
         token = token.decode('UTF-8')
-        # print('type: ', type(token))
         new_token = Token(user_id=log_user.id, token=token)
         db.session.add(new_token)
         db.session.commit()
 
-    return jsonify({'status': 'success', 'message': 'login successfully', 'username': log_user.username, 'token': token})
+    return jsonify({
+        'status': 'success', 
+        'message': 'login successfully', 
+        'username': log_user.username, 
+        'token': token})
 
 @users_blueprint.route('/logout', methods=['GET'])
 @token_required
@@ -106,33 +110,17 @@ def logout(current_user):
     db.session.delete(token)
     db.session.commit()
 
-    return jsonify({'status': 'success', 'message': 'logged out'})
+    return jsonify({
+        'status': 'success', 
+        'message': 'logged out'
+        })
 
 @users_blueprint.route('/current', methods=['GET'])
 @token_required
 def current(current_user):
     login_user(current_user)
-    return jsonify({'status': 'success', 'message': 'log in successfully', 'user': current_user.username})
-
-@users_blueprint.route('/all', methods=['GET'])
-def all():
-    users = User.query.all()
-    print(users[2].username)
-    print(users[1])
-    print(type(users))
-    messages = {}
-    for user in users:
-        message = {'username': user.username, 'email': user.email}
-        # print(message)
-        # print(type(message))
-        messages.update(message)
-        print(messages)
-    print(type(messages))
-    print(messages)
-    return jsonify(messages)
-
-@users_blueprint.route('/first', methods=['GET'])
-def first():
-    user = User.query.first()
-    print('username: ', user.username)
-    return jsonify({'username': user.username})
+    return jsonify({
+        'status': 'success', 
+        'message': 'log in successfully', 
+        'user': current_user.username
+        })
